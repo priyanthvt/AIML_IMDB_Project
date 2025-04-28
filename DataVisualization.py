@@ -150,7 +150,6 @@ elif (selected_page == 'Ratings by Genre'):
 
     df = pd.DataFrame(genre_average_rating, columns = ['Genre', 'Rating'])
     df.set_index('Genre', inplace = True)
-    df['Rating'] = df['Rating'].astype(int)
     fig, ax = plt.subplots()
     sns.heatmap(df, annot = True)
     st.pyplot(fig)
