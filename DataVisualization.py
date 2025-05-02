@@ -220,7 +220,6 @@ elif (selected_page == 'Interactive Filtering Functionality'):
     select_query = 'SELECT * FROM IMDB_MOVIES'
 
     db_query = select_query + ' ' + where_condition
-    st.write(db_query)
 
     cursor.execute(db_query)
 
