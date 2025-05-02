@@ -36,6 +36,7 @@ if selected_page == 'Top 10 Movies by Rating and Voting Counts':
     df = pd.DataFrame(rows, columns = ['Movie_name', 'Rating', 'Voting_Count'])
 
     st.dataframe(df)
+    st.write('These are the movies with the highest ratings and significant voting engagement.')
 
 elif (selected_page == 'Genre Distribution'):
     st.write('Count of movies for each genre')
@@ -52,6 +53,7 @@ elif (selected_page == 'Genre Distribution'):
     ax.set_ylabel('Movies Count')
     ax.bar_label(bar_chart)
     st.pyplot(fig)
+    st.write('Bar chart shows the count of movies for each genre.')
 
 elif (selected_page == 'Average Duration by Genre'):
     st.write('Average movie duration per genre')
@@ -67,6 +69,7 @@ elif (selected_page == 'Average Duration by Genre'):
     ax.set_ylabel('Genre')
     ax.bar_label(barh_chart)
     st.pyplot(fig)
+    st.write('The bar chart shows that the average movie duration is approximately 90 minutes across all genres.')
 
 elif (selected_page == 'Voting Trends by Genre'):
     cursor.execute("""SELECT GENRE, ROUND(AVG(Voting_Count)) AS AVERAGE_VOTING_COUNT FROM IMDB_MOVIES
@@ -83,6 +86,7 @@ elif (selected_page == 'Voting Trends by Genre'):
     ax.set_title('Voting Trends by Genre')
     plt.xticks(rotation=45)
     st.pyplot(fig)
+    st.write('Chart shows the average voting counts across different genres. More people have voted for adventure movies, followed by fantasy. Animation, biography, and family genres have received fewer votes. This could be because people are more interested in watching adventure movies than other genres.')
 
 elif (selected_page == 'Rating Distribution'):
     cursor.execute("""SELECT MOVIE_NAME, RATING FROM IMDB_MOVIES""")
@@ -96,6 +100,7 @@ elif (selected_page == 'Rating Distribution'):
     ax.set_ylabel('Movies Count')
     ax.set_title('Rating Distribution')
     st.pyplot(fig)
+    st.write('The histogram shows that the movie count is highest at a rating of 0, indicating that many movies are not rated. Additionally, the histogram is left-skewed.')
 
 elif (selected_page == 'Genre-Based Rating Leaders'):
     st.write('Top-rated movies for each genre')
@@ -107,19 +112,20 @@ elif (selected_page == 'Genre-Based Rating Leaders'):
 
     df = pd.DataFrame(rows, columns = ['Movie_Name', 'Genre', 'Rating'])
     st.dataframe(df)
+    st.write('These are the top-rated movies from each genre.')
 
 elif (selected_page == 'Most Popular Genres by Voting'):
-    cursor.execute("""SELECT GENRE, COUNT(MOVIE_NAME) FROM IMDB_MOVIES
-                        GROUP BY GENRE""")
+   cursor.execute('SELECT GENRE, SUM(VOTING_COUNT) AS TOTAL_VOTING_COUNT FROM IMDB_MOVIES GROUP BY GENRE')
 
     rows = cursor.fetchall()
 
-    df = pd.DataFrame(rows, columns = ['Genre', 'Movie_Count'])
+    df = pd.DataFrame(rows, columns = ['Genre', 'Voting_Count'])
 
     fig, ax = plt.subplots()
-    ax.pie(df['Movie_Count'], labels = df['Genre'], autopct = '%1.2f%%', startangle=90)
+    ax.pie(df['Voting_Count'], labels = df['Genre'], autopct = '%1.2f%%', startangle=90)
     ax.axis('equal')
     st.pyplot(fig)
+    st.write('The pie chart shows the genres with the highest total voting counts. It is evident from the chart that adventure movies have the highest voting count.')
 
 elif (selected_page == 'Duration Extremes'):
     cursor.execute("""SELECT MOVIE_NAME, DURATION_IN_MINS FROM IMDB_MOVIES
@@ -141,6 +147,7 @@ elif (selected_page == 'Duration Extremes'):
 
     df = pd.DataFrame(movie, index = ['shortest', 'longest'])
     st.dataframe(df)
+    st.write('The shortest movie has a duration of 2 minutes, while the longest movie runs for 347 minutes.')
 
 elif (selected_page == 'Ratings by Genre'):
     cursor.execute("""SELECT GENRE, ROUND(AVG(RATING), 1) AS AVERAGE_RATING FROM IMDB_MOVIES
@@ -153,6 +160,7 @@ elif (selected_page == 'Ratings by Genre'):
     fig, ax = plt.subplots()
     sns.heatmap(df, annot = True)
     st.pyplot(fig)
+    st.write('The heatmap illustrates the distribution of average ratings by genre.')
 
 elif (selected_page == 'Correlation Analysis'):
     cursor.execute("""SELECT RATING, VOTING_COUNT FROM IMDB_MOVIES""")
